@@ -61,7 +61,7 @@ describe('Email validation', () => {
             .then(cy.wrap)
     };
 
-    const regexp = /https\:\/\/www\.esanum\.de\/email\-change\-verification\/([a-z0-9]+)/;
+
 
     it.only('Find email', () => {
         cy.visit('https://www.esanum.de/admin/mailing/emailmessage/');
@@ -76,20 +76,23 @@ describe('Email validation', () => {
         let code;
 
         getIframeBody().find('a').each(a => {
+
+            const regexp = /https\:\/\/www\.esanum\.de\/email\-change\-verification\/([a-z0-9]+)/;
             const link = (a.attr('href')).match(regexp);
+
             if (!!link) {
                 code = link[1];
-            }
+                cy.log(link);
+            };
+        })
 
-            let validationLink = 'https://www.esanum.de/email-change-verification/' + code;
-            cy.visit(validationLink);
-        });
+        let validationLink = 'https://www.esanum.de/email-change-verification/' + code;
+        cy.log(validationLink);
+        // cy.visit(validationLink);
+        // if (validationLink) {
+        //     cy.visit(validationLink);
+        // } else {
+        //     cy.log('Link not found');
+        // };
     });
-
-    it('Give link', () => {
-
-    })
 })
-
-https://www.esanum.de/email-change-verification/xymw570adkxvsbo77jrzvuiyhja4uhcnpygyozrlpczkzctiiwy2jmjx8pfupqnc
-https://www.esanum.de/email-change-verification/xymw570adkxvsbo77jrzvuiyhja4uhcnpygyozrlpczkzctiiwy2jmjx8pfupqnc
