@@ -52,58 +52,44 @@ describe('Email validation', () => {
     });
 
     const getIframeDocument = () => {
-        return cy
-            .get('iframe')
-            .its('0.contentDocument').should('exist')
-    }
+        return cy.get('iframe').its('0.contentDocument').should('exist')
+    };
 
     const getIframeBody = () => {
         return getIframeDocument()
             .its('body').should('not.be.undefined')
             .then(cy.wrap)
-    }
+    };
 
-    const regexp = /https\:\/\/www\.esanum\.de\/email\-change\-verification\/(.*)/;
-    // const link = url.match(regexp);
+    const regexp = /https\:\/\/www\.esanum\.de\/email\-change\-verification\/([a-z0-9]+)/;
 
     it.only('Find email', () => {
         cy.visit('https://www.esanum.de/admin/mailing/emailmessage/');
         cy.get('input[name=username]').type(meUser.email);
         cy.get('input[type=password]').type(meUser.password);
         cy.get('input[type=submit]').click();
-        // cy.url().should('include', 'emailmessage/');
         cy.get('input[id=searchbar]').type('vtarasov.sk2@gmail.com');
         cy.get('input[type=submit]').click();
         cy.get('tbody tr:first-child a').click();
         cy.get('div#content h2:nth-child(2)').should('include.text', 'vtarasov.sk2@gmail.com');
 
+        let code;
+
         getIframeBody().find('a').each(a => {
             const link = (a.attr('href')).match(regexp);
-            cy.log(link);
+            if (!!link) {
+                code = link[1];
+            }
 
-            // link.match(regexp);
-            // cy.log(link);
-
+            let validationLink = 'https://www.esanum.de/email-change-verification/' + code;
+            cy.visit(validationLink);
         });
-        // contains(/https\:\/\/www\.esanum\.de\/email\-change\-verification\/(.*)/g).click()
-
-        // getIframeBody().find('a[href]').should('include.text', /https\:\/\/www\.esanum\.de\/email\-change\-verification\/(.*)/g).click()
-
-        // getIframeBody().find('#result').should('include.text', '"delectus aut autem"')
-
-        // cy.get('iframe');
-        // cy.get('a[href]').contains(/https\:\/\/www\.esanum\.de\/email\-change\-verification\/(.*)/);
-        // cy.contains('a[href]', /https\:\/\/www\.esanum\.de\/email\-change\-verification\/(.*)/);
-        // cy.contains('a[href]', 'https://www.esanum.de/email-change-verification/xymw570adkxvsbo77jrzvuiyhja4uhcnpygyozrlpczkzctiiwy2jmjx8pfupqnc');
-        // cy.get('a').invoke('href').contains(/https\:\/\/www\.esanum\.de\/email\-change\-verification\/(.*)/);
-        // cy.contains(/https\:\/\/www\.esanum\.de\/email\-change\-verification\/(.*)/);
-        // cy.get('iframe').click();
-        // cy.get('a:visible:contains(href)')
-        //     // .should('have.attr', 'href')
-        //     .and('match', /https\:\/\/www\.esanum\.de\/email\-change\-verification\/(.*)/g);
     });
 
     it('Give link', () => {
 
     })
 })
+
+https://www.esanum.de/email-change-verification/xymw570adkxvsbo77jrzvuiyhja4uhcnpygyozrlpczkzctiiwy2jmjx8pfupqnc
+https://www.esanum.de/email-change-verification/xymw570adkxvsbo77jrzvuiyhja4uhcnpygyozrlpczkzctiiwy2jmjx8pfupqnc
