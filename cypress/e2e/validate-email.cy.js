@@ -1,5 +1,15 @@
 import meUser from '../fixtures/me-user.json'
 
+function getIframeDocument() {
+    return cy.get('iframe').its('0.contentDocument').should('exist');
+}
+
+function getIframeBody() {
+    return getIframeDocument()
+        .its('body').should('not.be.undefined')
+        .then(cy.wrap);
+}
+
 describe('Email validation', () => {
 
     it('Visit to esanum', () => {
@@ -36,7 +46,6 @@ describe('Email validation', () => {
     });
 
 
-
     it('Change email', () => {
         cy.get('input[type=email]').clear().type('vtarasov.sk2@gmail.com');
         cy.get('button[type=submit]').click();
@@ -51,19 +60,7 @@ describe('Email validation', () => {
         cy.url().should('include', 'admin/');
     });
 
-    const getIframeDocument = () => {
-        return cy.get('iframe').its('0.contentDocument').should('exist')
-    };
-
-    const getIframeBody = () => {
-        return getIframeDocument()
-            .its('body').should('not.be.undefined')
-            .then(cy.wrap)
-    };
-
-
-
-    it.only('Find email', () => {
+    it.only('Find email', async () => {
         cy.visit('https://www.esanum.de/admin/mailing/emailmessage/');
         cy.get('input[name=username]').type(meUser.email);
         cy.get('input[type=password]').type(meUser.password);
@@ -73,26 +70,24 @@ describe('Email validation', () => {
         cy.get('tbody tr:first-child a').click();
         cy.get('div#content h2:nth-child(2)').should('include.text', 'vtarasov.sk2@gmail.com');
 
-        let code;
-
-        getIframeBody().find('a').each(a => {
-
-            const regexp = /https\:\/\/www\.esanum\.de\/email\-change\-verification\/([a-z0-9]+)/;
-            const link = (a.attr('href')).match(regexp);
-
-            if (!!link) {
-                code = link[1];
+        getIframeBody().find('a')
+            .then(links => {
+                for (const a of links) {
+                    const regexp = /https\:\/\/www\.esanum\.de\/email\-change\-verification\/([a-z0-9]+)/;
+                    const link = a.getAttribute('href').match(regexp);
+                    if (!!link) {
+                        return link[1];
+                    }
+                }
+                return null;
+            })
+            .should('not.be.null')
+            .then(code => {
+                const link = [Cypress.config('baseUrl'), 'email-change-verification', code].join('/');
                 cy.log(link);
-            };
-        })
+                // cy.visit(link);
+            });
 
-        let validationLink = 'https://www.esanum.de/email-change-verification/' + code;
-        cy.log(validationLink);
-        // cy.visit(validationLink);
-        // if (validationLink) {
-        //     cy.visit(validationLink);
-        // } else {
-        //     cy.log('Link not found');
-        // };
+        cy.log('done');
     });
 })

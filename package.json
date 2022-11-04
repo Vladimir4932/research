@@ -1,6 +1,23 @@
 {
-  "dependencies": {
-    "cypress": "^10.11.0"
+  "name": "research",
+  "version": "1.0.0",
+  "description": "",
+  "main": "cypress.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "chromeWebSecurity": false
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vladimir4932/research.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vladimir4932/research/issues"
+  },
+  "homepage": "https://github.com/Vladimir4932/research#readme",
+  "devDependencies": {
+    "cypress": "^10.11.0"
+  }
 }

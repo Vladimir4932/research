@@ -7,7 +7,7 @@ module.exports = defineConfig({
 
   e2e: {
     // baseurl: "https://process.env.STAFF_LOGIN:process.env.STAFF_PASSWORDwww-dev.esanum.de",
-    baseUrl: "https://www.esanum.de/"
+    baseUrl: "https://www.esanum.de"
 
     // setupNodeEvents(on, config) {
     //   // implement node event listeners here
