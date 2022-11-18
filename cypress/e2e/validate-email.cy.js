@@ -74,9 +74,9 @@ describe('Email validation', () => {
             .then(links => {
                 for (const a of links) {
                     const regexp = /https\:\/\/www\.esanum\.de\/email\-change\-verification\/([a-z0-9]+)/;
-                    const link = a.getAttribute('href').match(regexp);
-                    if (!!link) {
-                        return link[1];
+                    const matches = a.getAttribute('href').match(regexp);
+                    if (!!matches) {
+                        return matches[1];
                     }
                 }
                 return null;
